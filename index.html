@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Castastics Channel</title>
+    <meta name="description" content="The Castastics Channel is the official hub to watch Castastics content! Discover an expansive universe featuring a large cast of unique characters, stories, movies, and more.">
+    <style>
+
+
+        /* --- NEW YOUTUBE YELLOW STYLE LAYOUT --- */
+        .channel-banner {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            background-image: url('banner.jpg'); /* Name your banner image 'banner.jpg' */
+            background-size: cover;
+            background-position: center;
+            border-bottom: 4px solid #ffcc00;
+        }
+        .channel-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            margin: 25px auto 35px;
+            max-width: 1100px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .channel-pfp {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #ffcc00;
+            object-fit: cover;
+            background: #1a1a1a;
+        }
+        .channel-details {
+            flex: 1;
+            min-width: 250px;
+        }
+        .channel-details h1 {
+            color: #ffcc00;
+            font-size: 2.5rem;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+        .sub-count {
+            color: #aaa;
+            font-size: 1rem;
+            margin: 0 0 15px 0;
+            font-family: sans-serif;
+        }
+        .sub-btn {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .sub-btn:hover { transform: scale(1.05); background: #ffe066; }
+        .sub-btn.subscribed { background: #272727; color: #aaa; border: 1px solid #3e3e3e; }
+    body { 
+            background: #0d0d0d;
+            color: #ffcc00; 
+            font-family: 'Arial Black', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            text-align: center; 
+    }
+        
+        /* THE DYNAMIC PLAYER AREA */
+        #video-display { 
+            background: #111; 
+            padding: 10px; 
+            border: 4px solid #ffcc00; 
+            border-radius: 15px; 
+            margin-bottom: 40px; 
+            display: none; 
+            overflow: hidden;
+            width: fit-content;
+            max-width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* This makes the video fit perfectly without being too big */
+        video { 
+            width: 100%; 
+            max-width: 900px;
+            height: auto; 
+            max-height: 80vh; 
+            border-radius: 5px; 
+            box-shadow: 0 0 15px #ffcc00;
+            display: block;
+        }
+
+        .movie-title {
+    font-weight: bold;
+    margin: 8px 0 4px 0;
+    color: #fff;
+}
+.movie-desc {
+    font-size: 0.8rem;
+    color: #aaa;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0 5px 10px 5px;
+    text-align: left;
+}
+
+        #now-playing { margin-top: 15px; font-size: 1.2rem; text-transform: uppercase; color: #fff; padding-bottom: 10px; }
+
+       
+        /* SECTIONS & GRID */
+        .section-title { border-bottom: 3px solid #ffcc00; padding: 10px; margin: 40px 0 20px; font-size: 1.8rem; text-align: left; }
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        
+        /* Updated .card to allow dynamic vertical growth */
+        .card { 
+            width: 170px; 
+            background: #1a1a1a; 
+            padding: 10px; 
+            border-radius: 10px; 
+            border: 2px solid #333; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+        .card:hover { border-color: #ffcc00; transform: scale(1.05); }
+        .card img { width: 100%; height: 240px; object-fit: cover; border-radius: 5px; margin-bottom: 10px; flex-shrink: 0; }
+        
+        /* Removed the restrictive height and overflow rules from generic card paragraphs */
+        .card p { margin: 5px 0; font-size: 0.85rem; color: #fff; }
+        
+        select { background: #ffcc00; border: none; padding: 8px; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px; font-family: sans-serif; }
+        
+            /* --- SIMPLE TRAILERS SECTION --- */
+.trailers-section {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.trailers-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.trailer-box {
+    flex: 1;
+    min-width: 300px;
+    max-width: 450px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.trailer-box iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+               }
+
+        /* --- SIDEBAR TOGGLE SYSTEM --- */
+        #castastics-interface {
+            display: flex;
+            min-height: 100vh;
+            background-color: #000000;
+            position: relative;
+        }
+
+        /* The hidden side panel drawer */
+        #app-sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px; /* Hidden off-screen by default */
+            width: 260px;
+            height: 100vh;
+            background: #111111;
+            border-right: 2px solid #ffcc00;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 20px 20px 20px; /* Extra top padding for toggle button room */
+            box-sizing: border-box;
+            text-align: left;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        /* Dynamic active state when open */
+        #app-sidebar.open {
+            left: 0;
+        }
+
+        /* Main content wrapper updates */
+        #main-content { 
+            flex-grow: 1; 
+            width: 100%; 
+            overflow-x: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Pushes content smoothly over on desktop screens when sidebar opens */
+        @media (min-width: 769px) {
+            #castastics-interface.sidebar-active #main-content {
+                margin-left: 260px;
+                width: calc(100% - 260px);
+            }
+        }
+
+        /* THE HAMBURGER BUTTON */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            background: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #000;
+            transition: 0.3s;
+        }
+
+        /* SIDEBAR INTERFACE TEXT & MENUS */
+        .sidebar-logo h2 { margin: 0; font-size: 1.3rem; color: #ffcc00; text-transform: uppercase; }
+        .sidebar-logo p { margin: 5px 0 25px 0; font-size: 0.8rem; color: #aaa; font-family: sans-serif; }
+        .nav-menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        .nav-menu li { margin-bottom: 12px; }
+        .nav-item { display: block; padding: 12px 15px; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-family: sans-serif; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: #ffcc00; color: #000; font-weight: bold; }
+        
+        /* --- INTEGRATED FOOTER AREA --- */
+        footer {
+            margin-top: 60px;
+            padding: 30px 20px;
+            border-top: 2px solid #1a1a1a;
+            background: #0a0a0a;
+            font-family: sans-serif;
+        }
+        .footer-socials { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; }
+        .footer-socials a { color: #aaa; text-decoration: none; font-size: 0.9rem; font-weight: bold; transition: color 0.2s; }
+        .footer-socials a:hover { color: #ffcc00; }
+        .copyright { color: #555; font-size: 0.8rem; margin: 0; }
+        /* --- VISUAL STACKED LAYOUT WITH CUSTOM IMAGES --- */
+        .tube-shop-layout {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 10px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+        .collection-shelf {
+            width: 100%;
+            text-align: left;
+        }
+        .shelf-title {
+            color: #ffcc00;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            margin: 0 0 10px 5px;
+            font-weight: bold;
+        }
+        .merch-shop-card {
+            background: #111111;
+            border: 2px solid #222;
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            transition: border-color 0.2s;
+        }
+        .merch-shop-card:hover {
+            border-color: #ffcc00;
+        }
+        .merch-image-cover {
+            width: 100%;
+            height: 280px; /* Gives your custom artwork plenty of room */
+            background: #000;
+        }
+        .merch-image-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .merch-details-box {
+            padding: 15px;
+            background: #111;
+            border-top: 1px solid #222;
+        }
+        .merch-details-box h3 {
+            margin: 0 0 4px 0;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .merch-details-box p {
+            margin: 0;
+            color: #ffcc00;
+            font-size: 0.85rem;
+            font-family: sans-serif;
+        }
+
+        /* --- CONTACT BLOCK STYLES --- */
+        .contact-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #111111;
+            border: 3px solid #ffcc00;
+            border-radius: 15px;
+            padding: 30px 20px;
+        }
+        .contact-btn {
+            display: inline-block;
+            background: #ffcc00;
+            color: #000;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: 0.2s;
+            margin: 15px 0;
+            width: 80%;
+        }
+        .contact-btn:hover {
+            transform: scale(1.03);
+            background: #ffe066;
+        }
+        .contact-email {
+            color: #fff;
+            font-size: 1rem;
+            font-family: sans-serif;
+            margin-top: 15px;
+            word-break: break-all;
+        }
+        .contact-email a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+        .contact-email a:hover {
+            text-decoration: underline;
+        }
+
+            /* --- VISUAL TUBE-STYLE STACKED MERCH FEED --- */
+        .tube-shop-layout {
+            max-width: 650px; /* Perfectly frames standard Linktree layouts on all devices */
+            margin: 0 auto;
+            padding: 20px 10px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 45px; /* Creates clean spacing between each major collection category */
+        }
+        
+        .collection-shelf {
+            text-align: left;
+            width: 100%;
+        }
+        
+        .shelf-title {
+            color: #ffcc00;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 12px 10px;
+            font-weight: bold;
+            border-left: 4px solid #ffcc00;
+            padding-left: 10px;
+        }
+        
+        .live-shelf-portal {
+            width: 100%;
+            height: 600px; /* Gives each visual store plenty of vertical display room */
+            border: 2px solid #1a1a1a;
+            border-radius: 16px;
+            background: #111111;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.2s;
+        }
+        
+        .live-shelf-portal:hover {
+            border-color: #ffcc00;
+        }
+/* --- DIRECT SIDEBAR LOGO FIX --- */
+        .sidebar-logo {
+            text-align: center;
+            padding: 15px 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .sidebar-logo img {
+            width: 100%;
+            max-width: 130px; /* Adjust this to make the logo smaller or bigger */
+            height: auto;
+            display: block;
+            margin: 0 auto 5px;
+        }
+        .sidebar-logo p {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* --- RESPONSIVE CORNER ART STYLING --- */
+        .corner-art {
+            position: fixed;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.95;
+            z-index: 9999;
+        }
+        /* Desktop coordinates */
+        .top-left { top: 0; left: 0; width: 180px; }
+        .top-right { top: 0; right: 0; width: 180px; }
+        .bottom-left { bottom: 0; left: 0; width: 180px; }
+        .bottom-right { bottom: 0; right: 0; width: 180px; }
+
+        /* 📱 MOBILE FIX: Shrink and nudge into the absolute edges */
+        @media (max-width: 768px) {
+            .top-left { 
+                width: 100px; 
+                top: -15px; 
+                left: -15px; 
+            }
+            .top-right { 
+                width: 100px; 
+                top: -15px; 
+                right: -15px; 
+            }
+            .bottom-left { 
+                width: 100px; 
+                bottom: -15px; 
+                left: -15px; 
+            }
+            .bottom-right { 
+                width: 100px; 
+                bottom: -15px; 
+                right: -15px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="ripped_top_right.png" alt="" style="position: fixed; top: -15px; right: -15px; width: 100px; height: auto; z-index: 9999; pointer-events: none; opacity: 0.95;">
+    <img src="ripped_bottom_left.png" alt="" style="position: fixed; bottom: -15px; left: -15px; width: 100px; height: auto; z-index: 9999; pointer-events: none; opacity: 0.95;">
+    <img src="ripped_bottom_right.png" alt="" style="position: fixed; bottom: -15px; right: -15px; width: 100px; height: auto; z-index: 9999; pointer-events: none; opacity: 0.95;">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div id="castastics-interface">
+
+        <nav id="app-sidebar">
+            <div class="sidebar-logo">
+                <img src="logo.png" alt="The Castastics">
+                <p>Official Navigation</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-item active" onclick="switchPage('home')">Home</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('merch')">Merch</a></li>
+                <li><a href="#" class="nav-item" onclick="switchPage('contact')">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="main-content">
+            <div id="page-home" class="app-page">
+    <div class="channel-banner"></div>
+
+    <div class="container">
+        
+        <div class="channel-header">
+            <img src="pfp.jpg" class="channel-pfp" alt="Channel PFP"> <div class="channel-details">
+                <h1>The Castastics Channel</h1>
+                <div class="sub-count">
+    <span id="sub-count-text">Loading subscribers...</span> • 
+    <span id="view-count-text">Loading views...</span>
+                </div>
+                <div class="channel-links">
+            <a href="https://www.amazon.com/s?i=mobile-apps&rh=p_4%3AThe%2BCastastics&search-type=ss" target="_blank">📦 Games On Amazon Appstore</a>
+            <a href="https://www.amazon.com/stores/David-Artsy/author/B0CVR21P9C?ref=ap_rdr&shoppingPortalEnabled=true" target="_blank">📚 Buy Comics</a>
+            <a href="https://open.spotify.com/artist/64kJiIpqeckLgcpOXd2eVT?si=jR_qscNdTqSAcTR9DfzqSw" target="_blank">🎵 Stream Music</a>
+            <a href="https://apkpure.com/developer?id=24485827" target="_blank">🎮 Play Castastics Games</a>
+
+                    <div id="subscriber-perks-box" style="max-width: 800px; margin: 20px auto; padding: 20px; background: #111; border: 2px dashed #444; border-radius: 8px; font-family: sans-serif; text-align: center;">
+    
+    <div id="perks-locked" style="display: block; padding: 20px;">
+        <span style="font-size: 2rem;">🔒</span>
+        <h3 style="color: #ffcc00; margin: 10px 0 5px 0;">Subscriber Exclusive Content Locked</h3>
+        <p style="color: #aaa; font-size: 0.9rem; margin: 0;">Hit the yellow **SUBSCRIBE** button above to unlock premium local rewards!</p>
+    </div>
+
+    <div id="perks-unlocked" style="display: none;">
+        <h2 style="color: #ffcc00; margin-top: 0; font-size: 1.4rem;">🎉 THANK YOU FOR SUBSCRIBING! 🎉</h2>
+        <p style="color: #eee; font-size: 0.95rem; margin-bottom: 20px;">You've unlocked exclusive access to David Artsy's premium subscriber services:</p>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+            
+            <div style="background: #1c1c1c; border: 1px solid #ffcc00; border-radius: 6px; padding: 15px; width: 280px; text-align: center;">
+                <img src="chicken_chips.jpg" alt="Chicken and Chips" style="width: 100%; height: 160px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+                <h4 style="color: #fff; margin: 5px 0;">Trini Chicken & Chips Combo</h4>
+                <p style="color: #ccc; font-size: 0.85rem; margin: 0 0 10px 0;">Get a hot, fresh box of chicken & chips with a cold drink delivered straight to your home.</p>
+                <span style="display: block; background: #333; color: #ffcc00; font-size: 0.75rem; font-weight: bold; padding: 3px; border-radius: 3px;">🇹🇹 TRINIDAD ONLY</span>
+            </div>
+
+            <div style="background: #1c1c1c; border: 1px solid #ffcc00; border-radius: 6px; padding: 15px; width: 280px; text-align: center;">
+                <img src="david_singing.jpg" alt="David Artsy Singing" style="width: 100%; height: 160px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+                <h4 style="color: #fff; margin: 5px 0;">Special Occasion Serenade</h4>
+                <p style="color: #ccc; font-size: 0.85rem; margin: 0 0 10px 0;">Want me to perform live or record a custom romantic track for a birthday or special event?</p>
+                <span style="display: block; background: #333; color: #ffcc00; font-size: 0.75rem; font-weight: bold; padding: 3px; border-radius: 3px;">🎤 CUSTOM PERFORMANCE</span>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 25px;">
+            <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 8px;">To claim your rewards or book a service, tap below to contact me directly:</p>
+            <a href="https://wa.me/18683917461" target="_blank" style="display: inline-block; background: #ffcc00; color: #000; text-decoration: none; font-weight: bold; padding: 12px 24px; border-radius: 4px; font-size: 0.95rem;">Contact David Artsy to Claim</a>
+        </div>
+    </div>
+                    </div>
+
+                </div>
+                <button class="sub-btn" id="sub-button">Subscribe</button>
+            </div>
+            <div class="channel-description-box" style="padding: 15px 20px; text-align: center; max-width: 800px; margin: 0 auto 20px auto;">
+    <p style="color: #cccccc; font-size: 1.05rem; line-height: 1.6; font-family: sans-serif; margin: 0;">
+        Welcome to <strong style="color: #ffcc00;">The Castastics Channel</strong>, 🐾 The Castastics is a multimedia franchise created by David Artsy consist of movies, shows, games, comics, books, merch and more!🖌 
+Castastics is a world of large casts of unique characters and make all dreams come true! Many stories to tell within the CastasticVerse! 🌟
+    </p>
+            </div>
+        </div>
+<div class="trailers-section">
+    <div class="section-title">OFFICIAL TRAILERS & PROMOS</div>
+    <div class="trailers-grid">
+        
+        <div class="trailer-box">
+            <iframe src="https://www.youtube-nocookie.com/embed/qS1KAb05-k0" allowfullscreen></iframe>
+        </div>
+
+        <div class="trailer-box">
+            <iframe src="https://www.youtube-nocookie.com/embed/895LbFmZZSQ" allowfullscreen></iframe>
+        </div>
+
+    </div>
+</div>
+        <div id="video-display">
+            <div id="player-container"></div>
+            <div id="now-playing">SELECT A STORY TO START</div>
+        </div>
+<div id="media-interaction-box" style="display: none; max-width: 800px; margin: 20px auto; padding: 15px; background: #111; border-radius: 8px; border: 1px solid #222; font-family: sans-serif;">
+            
+            <div class="rating-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+                <div>
+                    <h3 id="rating-title" style="color: #fff; margin: 0 0 5px 0; font-size: 1.1rem;">Ratings for This Media</h3>
+                    <div style="color: #ffcc00; font-size: 1.2rem;">
+                        <span id="average-stars">⭐⭐⭐⭐⭐</span> 
+                        <span id="average-rating-text" style="color: #aaa; font-size: 0.9rem; margin-left: 5px;">(5.0/5)</span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 5px;">Leave a Rating:</span>
+                    <select id="user-star-input" style="background: #222; color: #fff; border: 1px solid #444; padding: 5px; border-radius: 4px;">
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4)</option>
+                        <option value="3">⭐⭐⭐ (3)</option>
+                        <option value="2">⭐⭐ (2)</option>
+                        <option value="1">⭐ (1)</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3 style="color: #fff; margin: 0 0 15px 0; font-size: 1.1rem;">Community Comments</h3>
+            
+            <div id="comments-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                </div>
+
+            <div class="comment-input-form" style="display: flex; gap: 10px;">
+                <input type="text" id="comment-username" placeholder="Your Name" style="width: 25%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.9rem;">
+                <input type="text" id="comment-text" placeholder="Add a public comment..." style="width: 60%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.9rem;">
+                <button onclick="submitComment()" style="width: 15%; background: #ffcc00; color: #000; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer;">Post</button>
+            </div>
+</div>
+        <div class="section-title">CASTASTICS MOVIES</div>
+<div class="grid">
+    <!-- MOVIE 1 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/asw36zly5e8gtoaiqtw8s/The-Castastics-Movie.mp4?rlkey=nqqr5pzt0u41pp4flh3e35u2l&st=e5w5jr2p&raw=1', 'The Castastics Movie'); registerVideoView(); loadMediaInteraction('movie1');">
+        <img src="posters/movie1.jpg">
+        <p class="movie-title">The Castastics Movie</p>
+        <p class="movie-desc">David, a 16 yr old boy who dreams of becoming an artist ever since, created books based upon his childhood and with the help of his magical castastian friends lives in his house. His goal is to get his artwork known.</p>
+    </div>
+    
+    <!-- MOVIE 2 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/3qisp19s9zd7c0cf46hlm/The-Castastics-2_-Into-The-CastasticVerse-Full-Movie.mp4?rlkey=5cewkcfmpppi4t0h60s6pgpde&st=829h902b&raw=1', 'The Castastics 2: Into The CastasticVerse'); registerVideoView(); loadMediaInteraction('movie2');">
+        <img src="posters/movie2.jpg">
+        <p class="movie-title">The Castastics 2: Into The CastasticVerse</p>
+        <p class="movie-desc">The second movie of the series. David, a 20 yr old, a famous author and completed his dreams of being an artist to get his work known. He off to a new chapter in his life, getting his dream girl, Shiann, who is now back in Trinidad. The Castastians also have to stop Jael, David's former crush from destroying the CastasticVerse.</p>
+    </div>
+    
+    <!-- MOVIE 3 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/2tovxadce8bp9dwah4gah/The-Castastics-3_-Brookhaven-Full-Movie.mp4?rlkey=0m66e3wflx5tjlaroph9eyocj&st=gg8ermz6&raw=1', 'The Castastics 3: Brookhaven'); registerVideoView(); loadMediaInteraction('movie3');">
+        <img src="posters/movie3.jpg">
+        <p class="movie-title">The Castastics 3: Brookhaven</p>
+        <p class="movie-desc">David, now an adult have adopted a kid, BabyDavid and take care of him but is feeling sad about Shiann being a gold digger and she was not who she was. But then, Emily Moraldo (David's first crush from SJS) came back to David's life and soon they both create an artsy family together.</p>
+    </div>
+    
+    <!-- MOVIE 4 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/9qadd7cooyx87pe8g9ano/The-Castastics-4_-Castastic-Heroes-FULL-MOVIE.mp4?rlkey=kgc216e0vk856qjf45jmwt866&st=09l357jj&raw=1', 'The Castastics 4: Castastic Heroes'); registerVideoView(); loadMediaInteraction('movie4');">
+        <img src="posters/movie4.jpg">
+        <p class="movie-title">The Castastics 4: Castastic Heroes</p>
+        <p class="movie-desc">In a brand new era, after BabyDavid Jr. defeated Gabby and imprison her for good, her daughter take matters within her own hands and destroys the Castastics World that David worked so hard to build, so the Castastians, BabyDavid, BabyBrian, Iesha, Azariah, Elijah, and new friends alike step up and became heroes. Took place within David's creative world he built in his books and drawings.</p>
+    </div>
+    
+    <!-- MOVIE 5 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/gqg8okmhswfvc43pvh5mw/The-Castastics-5_-The-Final-Battle.mp4?rlkey=nytboa0t5gyndninod65inovf&st=1udj3j8x&raw=1', 'The Castastics 5: The Final Battle'); registerVideoView(); loadMediaInteraction('movie5');">
+        <img src="posters/movie5.jpg">
+        <p class="movie-title">The Castastics 5: The Final Battle</p>
+        <p class="movie-desc">Talos returns to destroy the Castastics world David created, a world where no one can ever die and live in peace and harmony, now its up to the castastians to protect their world no matter what.</p>
+    </div>
+    
+    <!-- MOVIE 6 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/3gftio24dikq9fkhwtccm/The-Super-Toys-A-Castastics-Story.mp4?rlkey=01gzkpx99jw9r5fron96t260f&st=eiezm8gw&raw=1', 'The Super Toys (A Castastics Story)'); registerVideoView(); loadMediaInteraction('movie6');">
+        <img src="posters/movie6.jpg">
+        <p class="movie-title">The Super Toys</p>
+        <p class="movie-desc">Mr. Fruitó strikes again but decides to change his ways for good.</p>
+    </div>
+    
+    <!-- MOVIE 7 -->
+    <div class="card" onclick="playMedia('https://www.dropbox.com/scl/fi/hymc8ynygh76oev3vlq5s/The-Idiotastics-Movie-A-Castastics-Story.mp4?rlkey=ukb8jjdm9nwjtu69klm5zwe2h&st=x8erf7ek&raw=1', 'The Idiotastics Movie (A Castastics Story)'); registerVideoView(); loadMediaInteraction('movie7');">
+        <img src="posters/movie7.jpg">
+        <p class="movie-title">The Idiotastics Movie</p>
+        <p class="movie-desc">Brian, David's autistic and not so smart music lover, completed his dreams of being a musician and even meeting lady gaga, his idol.</p>
+    </div>
+    </div>
+
+        <div class="section-title">TV SHOWS</div>
+        <div class="grid">
+            
+            <div class="card">
+                <img src="posters/castastics_show.jpg">
+                <p>The Castastics</p>
+                <select onchange="playMedia(this.value, 'The Castastics ' + this.options[this.selectedIndex].text); if(this.value) { registerVideoView(); loadMediaInteraction('castastics_show'); }">
+                    <option value="">Select Episode</option>
+                    
+                        
+                    <optgroup label="Season 1">
+    <option value="https://www.dropbox.com/scl/fi/h6kin2ngn7tje3ou50r9w/ep1.mp4?rlkey=o2cc76m7lmva5a0jnz0xu84vb&st=f7208p6i&raw=1">Ep 1: Radio</option>
+    <option value="https://www.dropbox.com/scl/fi/r8xc0o1ni23ru17u23qn8/ep2.mp4?rlkey=q9cnmtel5f972z0xhfxoydav1&st=z2vw8x8p&raw=1">Ep 2: The Evil Toys</option>
+    <option value="https://www.dropbox.com/scl/fi/fye32yhcarwl0uaxq1gik/ep3.mp4?rlkey=hqx498b0wbglnxdcvl9wh5wza&st=1bck3hzd&raw=1">Ep 3: Tomato/Z</option>
+    <option value="https://www.dropbox.com/scl/fi/fkl3y80ondpk2gw84fyay/ep4.mp4?rlkey=8hm1zl7tjk245w4r3oz6xgbcv&st=0oqir6lo&raw=1">Ep 4: Letters V. Numbers</option>                             
+    <option value="https://www.dropbox.com/scl/fi/tivo7fs9zk3n93dysfi97/ep5.mp4?rlkey=ehnxkfbhcxaetrd22tu5jpmqj&st=lznhwf7k&raw=1">Ep 5: Evil Scissors</option>                
+    <option value="https://www.dropbox.com/scl/fi/lmykb303ina8j25craqqt/ep6.mp4?rlkey=e1v8axajt8h40foswbw0qn644&st=jh8mv96a&raw=1">Ep 6: Evil Klipper</option>                
+     <option value="https://www.dropbox.com/scl/fi/ack2j8takly4b1avpa2cm/ep7.mp4?rlkey=quw85w53npb3feen6s14hgygy&st=2gp22ys4&raw=1">Ep 7: Marble Trouble</option>               
+      <option value="https://www.dropbox.com/scl/fi/iu6s0iqg4d2gwlyiyf96r/ep8.mp4?rlkey=14izvwat2pplu3eshq814am7c&st=z3sbg8zm&raw=1">Ep 8: The Castastic Killer</option>              
+                    
+                    
+                    
+                    </optgroup>
+                    
+        
+
+                    <optgroup label="Season 2">
+                        <option value="https://www.dropbox.com/scl/fi/kcr2csmk9ux20bhy70bkq/The-Castastics-S2-EP-1-Bella-the-Pig-Explains.mp4?rlkey=watokurmhagkn107rabcc20cv&st=02dbjtdf&raw=1">Ep 1: Bella The Pig Explains</option>
+                        <option value="https://www.dropbox.com/scl/fi/llejnz0mdjdguaawybtbn/The-Castastics-S2-EP-2-Screw-got-a-makeover-XD.mp4?rlkey=nifqgbb6kv54l88qgb8jj9y8h&st=d23pwmta&raw=1">Ep 2: Screw Got A Makeover</option>
+                        <option value="https://www.dropbox.com/scl/fi/ny00d9ewwi463c0jab90u/The-Castastics-S2-EP-3-Is-Key-Okay__.mp4?rlkey=2gtr5sybj1kqa0ihyixd1q3cz&st=uh99nudi&raw=1">Ep 3: Is Key Okay?</option>
+                        <option value="https://www.dropbox.com/scl/fi/9bybg1l78vkmzm94q88cd/The-Castastics-S2-EP-4-Carmen-wants-David-s-Roblox-Account__.mp4?rlkey=m7cbt0eh8sypc6o7endmjj37o&st=2ayevs0t&raw=1">Ep 4: Carmen Wants David's Roblox Account</option>
+                        <option value="https://www.dropbox.com/scl/fi/ryr5q3tx8ek54jc4lwvi1/The-Castastics-S2-EP-5-Springy-corrects-Carmen-s-grammar-error....mp4?rlkey=b4pr5wypl7h2pxq4z6n109kha&st=1ad4dyng&raw=1">Ep 5: Springy Corrects Carmen</option>
+                        <option value="https://www.dropbox.com/scl/fi/dlr7xj3xpnbhlotizipac/The-Castastics-S2-EP-6-Ezekiel-s-funeral-bring-some-tissues.mp4?rlkey=dyveqze75sn5kfjlpii4fhd3n&st=y6o7fre0&raw=1">Ep 6: Ezekiel's Funeral</option>
+                        <option value="https://www.dropbox.com/scl/fi/vt5aedwlduhey1lnaainu/The-Castastics-S2-EP-7-New-Metals.mp4?rlkey=b0v9eu6iw83kl897wmqfei4zh&st=4p0z9v8j&raw=1">Ep 7: New Metals</option>
+                        <option value="https://www.dropbox.com/scl/fi/o29jajtswny4j6e4oysjg/The-Castastics-S2-EP-8-New-Pens.mp4?rlkey=yls1sz3p03ghrt3lkzcx4ups3&st=fvcvap92&raw=1">Ep 8: New Pens</option>
+                        <option value="https://www.dropbox.com/scl/fi/bwa22uv6c4j9sqn8e4wkt/The-Castastics-S2-EP-9-Final-David-s-message.mp4?rlkey=jeqxj9t6gn0ryld704dyf4wx4&st=fy4oc159&raw=1">Ep 9: Final David Message</option>
+                        <option value="https://www.dropbox.com/scl/fi/7yxsw2r5hx2ew4q6x2iu7/The-Castastics-S2-EP-10-Decorate-My-Room-with-my-Castastians.mp4?rlkey=9vogh3a77u5vp7578mb5lpzn9&st=6yzfb4sr&raw=1">Ep 10: Decorate My Room /W The Castastians</option>
+                        <option value="https://www.dropbox.com/scl/fi/fbvpn80qozi9lzwl5b5s5/The-Castastics-S2-EP-11-New-Castastian-Characters.mp4?rlkey=j32mkqtakcejk4t5pous8ysi2&st=eussltf6&raw=1">Ep 11: New Castastians</option>
+                        <option value="https://www.dropbox.com/scl/fi/f6k8yrxrabk1gal3i59k2/The-Castastics-S2-EP-12-More-Super-Toys.mp4?rlkey=c1h3wrhcilyl6pxf1x90ffpkl&st=5g4idm8b&raw=1">Ep 12: More Super Toys</option>
+                        <option value="https://www.dropbox.com/scl/fi/c1n02bcs4kvfixmy3mt40/The-Castastics-S2-EP-13-LITTLE-ROOM-TOUR-NEW-CASTASTIANS.mp4?rlkey=h4zjugeght1hmjoy63tus4duh&st=cxdw0b2w&raw=1">Ep 13: Room Tour</option>
+                        <option value="https://www.dropbox.com/scl/fi/tfqislj0xutkpx9mm4hm7/The-Castastics-S2-EP-14-Showcasing-My-Super-Toys.mp4?rlkey=6jh1q9uvphc0nes4ixriwlz55&st=y3itxrq4&raw=1">Ep 14: Showcasing TST</option>
+                        <option value="https://www.dropbox.com/scl/fi/s4marqfyvaaaaavbt8o32/The-Castastics-S2-EP-15-Showcasing-My-Drawings-On-My-Wall.mp4?rlkey=ge0i5yohhd73fonctprlqoe7p&st=9cv5h44m&raw=1">Ep 15: Showcasing My Drawings</option>
+                        <option value="https://www.dropbox.com/scl/fi/nqnwskgnjx9c40j1h5rjf/The-Castastics-S2-EP-16-Layla-has-been-fixed-castastics.mp4?rlkey=jc4dhdzhcwt7eodx2szmx0gz0&st=x9yje22y&raw=1">Ep 16: Layla Is Fixed</option>
+                        <option value="https://www.dropbox.com/scl/fi/fgxokgvl7onfkzxctrjxn/The-Castastics-S2-EP-17-Adrien-s-new-look-tst-castastics.mp4?rlkey=636jlcqq1rycgbadfwadhlmgt&st=4m37757h&raw=1">Ep 17: Adrien New Look</option>
+
+                    </optgroup>
+
+
+
+
+ <optgroup label="Season 3">
+
+
+<option value="https://www.dropbox.com/scl/fi/6ehmxrszka5zzri0yypgw/The-Castastics-S3-EP-1-_-Talos-Vs.-The-Super-Toys.mp4?rlkey=2ravzwb6ixagpali7ro0yl6vj&st=kvl4zcpk&raw=1">Ep 1: Talos Vs. The Super Toys</option>
+     <option value="https://www.dropbox.com/scl/fi/mpzhtdwxt23ui60oqi8al/The-Castastics-S3-EP-2-_-Marble-Family-Drama.mp4?rlkey=p3egwcly95jw89dxr8o7d012c&st=fjm3r30a&raw=1">Ep 2: Marble Family Drama</option>
+     <option value="https://www.dropbox.com/scl/fi/vqy95nuw1ql3ar77qqgwy/The-Castastics-S3-EP-3-_-Evil-Pen-Vs.-The-Pens.mp4?rlkey=z5mu7pey0eci61kqqk40bdxzg&st=gf5ukmuk&raw=1">Ep 3: Evil Pen Vs. The Pens</option>
+     <option value="https://www.dropbox.com/scl/fi/xt9jwwokg6aq424rcpd49/The-Castastics-S3-EP-4-_-Boxlunch-Killer-Goes-On-A-Rampage.mp4?rlkey=5mk3s286j2ccml4elxzzg9u56&st=vcxuey75&raw=1">Ep 4: Boxlunch Killer Goes On A Rampage</option>
+     <option value="https://www.dropbox.com/scl/fi/832m30qw0soqn1zulhy9t/The-Castastics-S3-EP-5-_-That-s-Mr.-Fruit-To-You.mp4?rlkey=x1dfd0kg77u2gp19uqlmwqcrs&st=68cfq3tm&raw=1">Ep 5: That's Mr. Fruitó To You</option>
+             
+            </optgroup>
+
+                    
+ <optgroup label="Season 4">
+     <option value="https://www.dropbox.com/scl/fi/nrgt4jzak7wqtjxbmpybt/The-Castastics-S4-EP-1-Don-t-take-out-your-anger-out-on-others-castastics.mp4?rlkey=k8qr23al14ozqdy0m6dy8p8zt&st=9v1pzpyl&raw=1">Ep 1: Control Your Anger</option>
+       <option value="https://www.dropbox.com/scl/fi/mic3h2t20vuuwi32xatek/The-Castastics-S4-EP-2-Coffee-and-Maxwell-Making-Noise.mp4?rlkey=f9hyh02scjwx38w1hupesn6ev&st=6xxg470n&raw=1">Ep 2: Coffee&Maxwell</option>
+<option value="https://www.dropbox.com/scl/fi/lck87pjmctyfhcs9xleue/The-Castastics-S4-EP-3-Pax-is-just-an-ordinary-mug-castastics-bombastics.mp4?rlkey=qs3udmbrd05yml2kfpguhah2i&st=xyqepvnc&raw=1">Ep 3: Pax The Ordinary Mug</option>
+     <option value="https://www.dropbox.com/scl/fi/09cqxnina7epa2azjahjc/The-Castastics-S4-EP-4-Super-Paper-To-The-Rescue-castastics.mp4?rlkey=vkv0t3wmrdfx8o48d8imodsuo&st=hut8cacs&raw=1">Ep 4: Super Paper To The Rescue</option>
+     <option value="https://www.dropbox.com/scl/fi/huvqzay8pl434dlecz5th/The-Castastics-S4-EP-5-Ezekiel-Teaches-Frank-Jr.-How-To-Fight-castastics.mp4?rlkey=3ai5egzs1thskqkje0mom0ut3&st=4btwjuow&raw=1">Ep 5: Ezekiel Teaches Frank Jr</option>
+     <option value="https://www.dropbox.com/scl/fi/kwc9n5iou6xlm16px1jia/The-Castastics-S4-EP-6-Meet-The-Shoe-Twinz-castastics-bombastics.mp4?rlkey=ookhm46iguvb7ywdssrkfmaq1&st=59mbai9t&raw=1">Ep 6: Meet The Shoes Twinz</option>
+     <option value="https://www.dropbox.com/scl/fi/qnkdnuxgp9zmou60oo5le/The-Castastics-S4-EP-7-BaconHairRyan-Tells-Noobie-To-Man-Up.mp4?rlkey=xrfkyeti33gykmg4tgy6czuf7&st=3gugis4a&raw=1">Ep 7: Bacon Hair Ryan Tells Noobie To Man Up</option>
+     <option value="https://www.dropbox.com/scl/fi/farx1gyqnf3ao38eozdm8/The-Castastics-S4-EP-8-Hey-Oscar...-castastics.mp4?rlkey=4vtogz53ajn1mfqw0w8c0qhgl&st=wets74fm&raw=1">Ep 8: Hey Oscar</option>
+     <option value="https://www.dropbox.com/scl/fi/tpbjip5xvm78oii6sf1am/The-Castastics-S4-EP-9-Black-Perfume-got-a-daughter__-castastics.mp4?rlkey=i4fndw4awtrvwtjhipqk2md8z&st=ab0ccns8&raw=1">Ep 9: Black Perfume's Daughter</option>
+     <option value="https://www.dropbox.com/scl/fi/zn74wbctln44nd3khh6jf/The-Castastics-S4-EP-10-Meet-Brown-Wallet-a-bombastic-castastics-bombastics.mp4?rlkey=ovhkw6t8h051twp6w1sujywve&st=huzhjqzl&raw=1">Ep 10: Brown Wallet</option>
+     <option value="https://www.dropbox.com/scl/fi/8y59epdpqr4uef0leep3k/The-Castastics-S4-EP-11-We-Are-The-Castastics.mp4?rlkey=0tpg53o9brbx0b3c46biioxy0&st=vq8vrrk7&raw=1">Ep 11: We Are The Castastics</option>
+     <option value="https://www.dropbox.com/scl/fi/75583r0hc08t7nl5p670l/The-Castastics-S4-EP-12-New-Magnets-On-The-Fridge__-castastics.mp4?rlkey=czznjiyssuulw2nfrmewzg7sm&st=eyv8hri9&raw=1">Ep 12: New Magnets On The Fridge</option>
+     <option value="https://www.dropbox.com/scl/fi/x6wm5ux01hdkdrely5674/The-Castastics-S4-EP-13-Steele-and-Danny-are-good-friends-y-know.mp4?rlkey=f8zvbmx0eaz2xjvawrj0mgldw&st=sdmshhc0&raw=1">Ep 13: Steele and Danny</option>
+     <option value="https://www.dropbox.com/scl/fi/fw0kk6otrgtkhmfw44xt8/The-Castastics-S4-EP-14-James-stop-playing-the-fool-castastics.mp4?rlkey=nc1u8zkc943rtzcl7idsu95pz&st=tikq7pjn&raw=1">Ep 14: James The Watch Plays The Fool</option>
+     <option value="https://www.dropbox.com/scl/fi/71pirai6658u48mxi4qyz/The-Castastics-S4-EP-15-Doing-this-habit-tickles-my-foot-XD.mp4?rlkey=quf5vdmttdanzl5hmac56lax6&st=c751hob0&raw=1">Ep 15: Doing This Make My Foot Tickles</option>
+     
+
+
+
+ </optgroup>
+
+  <optgroup label="Season 5">  
+
+<option value="https://www.dropbox.com/scl/fi/kjfxx62kdxpsrr34dnsci/The-Castastics-S4-EP-16-What-are-they-even-talking-about_.mp4?rlkey=f4bdt04g3xfgf8ymmbt004rjw&st=xfaed7i8&raw=1">Ep 1: The Noses</option>
+<option value="https://www.dropbox.com/scl/fi/63j4ifbxarcba74sozu4p/The-Castastics-S4-EP-17-Want-some-tea_-castastics.mp4?rlkey=dufgto0l21au39rcxkhjxxzv5&st=ja64fabq&raw=1">Ep 2: Want Tea?</option>
+  <option value="https://www.dropbox.com/scl/fi/paz2s3h9eyudzce8gthzm/The-Castastics-S4-EP-18-Castastics-box-castastics.mp4?rlkey=vijh51t6tefua4czp0kphhcg0&st=34jeefgm&raw=1">Ep 3: Castastic Box</option>
+    <option value="https://www.dropbox.com/scl/fi/izxkcoyihw063u07ls8t9/The-Castastics-S4-EP-19-Ronal-King-Dancing.mp4?rlkey=7tabtazz9fcuqxd0iw19w8g84&st=mm2hkwwh&raw=1">Ep 4: Ronal King Dancin'</option>
+      <option value="https://www.dropbox.com/scl/fi/gm8b5h1nln4skw047dan3/The-Castastics-S4-EP-20-Zipper-has-grown-up....mp4?rlkey=6cp24kdzexvl27hb30zxpae0m&st=qfskgid9&raw=1">Ep 5: Zipper Grows Up</option>
+      <option value="https://www.dropbox.com/scl/fi/b19exroo8s5yg953y8ns9/The-Castastics-S4-EP-21-The-Plants-just-chillin.mp4?rlkey=9eyp5blxw6uf9gze2veiaskhj&st=2zbpa8qq&raw=1">Ep 6: Plants Chillin'</option>
+      <option value="https://www.dropbox.com/scl/fi/166agauz9s5sbxrstk83c/The-Castastics-S4-EP-22-Radio-stand.mp4?rlkey=zt94cpthrj1zz17xe9j7i56tr&st=24o8fsan&raw=1">Ep 7: Radio Stand</option>
+      <option value="https://www.dropbox.com/scl/fi/oosu29qntyixof1iesnz6/The-Castastics-S4-EP-23-Here-s-tape-guys.mp4?rlkey=z60ny4ijx4dgdbn8egjrm4m45&st=rl1g1wz3&raw=1">Ep 8: Tape</option>
+      <option value="https://www.dropbox.com/scl/fi/zhgasvks0klhdx9iw2rx1/The-Castastics-S4-EP-24-David-s-primary-school-graduation.mp4?rlkey=xabj0r4an56osn96ny6rrwxi1&st=ca5vadik&raw=1">Ep 9: Primary School Grad</option>
+      <option value="https://www.dropbox.com/scl/fi/3dva7tfx45wf07m6sdeuh/The-Castastics-S4-EP-25-Checking-up-on-oscar.mp4?rlkey=tm2pdry0ufx4s6mfxlsyyknit&st=0hij5k39&raw=1">Ep 10: Checking On Oscar</option>
+      <option value="https://www.dropbox.com/scl/fi/in4cbnxversk8uc2mji3b/The-Castastics-S4-EP-26-Oscar-gettin-train.mp4?rlkey=26g47zg35knargiukcwkp1mpc&st=5s3hryuc&raw=1">Ep 11: Oscar Gets Train</option>
+      <option value="https://www.dropbox.com/scl/fi/potjxur0ezb2yn86krvxp/The-Castastics-S4-EP-27-Rocket-bites-me.mp4?rlkey=x4f8a36ex5yitl6gncfg5ntmn&st=no12gn3z&raw=1">Ep 12: Rocket Bites Me</option>
+      <option value="https://www.dropbox.com/scl/fi/k4ilygkyopyxfzcd8mtuw/The-Castastics-S4-EP-28-Meet-Rocket.mp4?rlkey=w5b9ky0318djrrmnqf5tf1w42&st=c8gheumu&raw=1">Ep 13: Rocket</option>
+      <option value="https://www.dropbox.com/scl/fi/hyn09ivgwgxacgtt04mbg/The-Castastics-S4-EP-29-Boxlunch-killer-singing-memes-funny.mp4?rlkey=81lej9eheb469don6oeb9wpuf&st=n9kbzb8v&raw=1">Ep 14: Boxlunch Killer Sings</option>
+      <option value="https://www.dropbox.com/scl/fi/clin215lyq0zdtp7um0n4/The-Castastics-S4-EP-30-Some-Castastics-Characters-Showcase.mp4?rlkey=40rbv9ez532q3lwekrgkog4be&st=p7fmuvt3&raw=1">Ep 15: Showcasing Castastians</option>
+
+
+      
+  </optgroup>
+                </select>
+            </div>
+
+            <div class="card">
+                <img src="posters/idiotastics_show.jpg">
+                <p>The Idiotastics</p>
+                <select onchange="playMedia(this.value, 'The Idiotastics ' + this.options[this.selectedIndex].text); if(this.value) { registerVideoView(); loadMediaInteraction('idiotastics_show'); }">
+                    <option value="">Select Episode</option>
+                    <optgroup label="Season 1">
+                        <option value="https://www.dropbox.com/scl/fi/stktzu7p1ivukwgruobta/The-Idiotastics-S1-EP-1-Rover-the-green-alien-pup-got-a-msg-for-you.mp4?rlkey=ymnwcka58ubmloqceer661tr6&st=2zdht4i9&raw=1">Ep 1: Rover</option>
+                        <option value="https://www.dropbox.com/scl/fi/alyu42yarf5dih7eh3z28/The-Idiotastics-S1-EP-2-Badamario-secret-agent-got-a-srs-msg.mp4?rlkey=1rgc9fxq3bkatb6b11uutkxzd&st=5frxdrfo&raw=1">Ep 2: Badamario</option>
+                        <option value="https://www.dropbox.com/scl/fi/exmonw0fdyd64ujuxy1vl/The-Idiotastics-S1-EP-3-Bro-drivin-like-a-maniac-roblox.mp4?rlkey=w8vcc66xkhonli6jzqh8j6tta&st=1r2o6pa2&raw=1">Ep 3: Maniac Driver</option>
+                        <option value="https://www.dropbox.com/scl/fi/jd5sba0z8xacqgjwl4wl9/The-Idiotastics-S1-EP-4-Brian-Scaring-David-roblox-robloxshorts.mp4?rlkey=kbbqe93ebj5b20wbeikcuxvo4&st=lp0k8c30&raw=1">Ep 4: Brian Scares David</option>
+                        <option value="https://www.dropbox.com/scl/fi/re50p8zbrg7ibqe70zlu6/The-Idiotastics-S1-EP-5-Meet-BabyBrian.mp4?rlkey=5jyc0wl2scz3du7hgfv5wydhj&st=nntbb8ih&raw=1">Ep 5: BabyBrian</option>
+                        <option value="https://www.dropbox.com/scl/fi/svobmumi9xf9n7xb9ytpg/The-Idiotastics-S1-EP-6-BabyBrian-BB-and-BD-BabyDavid-meet-up.mp4?rlkey=muhbclst22z1lcczap8gv2q1m&st=k8bmm5xt&raw=1">Ep 6: BabyBrian Meets BabyDavid</option>
+                        <option value="https://www.dropbox.com/scl/fi/5h6n2gyxyg8w11nyjkn7l/The-Idiotastics-S2-EP-1-Brian-Won-t-Share-roblox.mp4?rlkey=80pc1hgwvvy0e1re43lmqaeyb&st=aca5h2jf&raw=1">Ep 7: Brian Wont Share</option>
+                        <option value="https://www.dropbox.com/scl/fi/2ekekto3o1sd3lg5vvfq2/The-Idiotastics-S2-EP-2-GIMME-YOUR-MONEEEEEY-roblox.mp4?rlkey=ervmto6uwffzw2zzp1befa26f&st=e6d9nfpp&raw=1">Ep 8: Gimme My Money</option>
+                        <option value="https://www.dropbox.com/scl/fi/743zttda56na9ax5qnvo3/The-Idiotastics-S2-EP-3-SAVE-ME-PLEASSEE-HEEEEEELLLLLPPP.mp4?rlkey=9g9pycj27neuenb1djw8ro0fo&st=0b38iv34&raw=1">Ep 9: David Need Help</option>
+                    </optgroup>
+
+                    <optgroup label="Season 2">
+                        <option value="https://www.dropbox.com/scl/fi/yipvub3ugujnlg9p7po9i/The-Idiotastics-S2-EP-4-Clones-of-Asa-s-roblox-robloxshorts-castastics-babymonster.mp4?rlkey=3lhvzg80gas1seymsoi4xfx2a&st=xjv5h0e4&raw=1">Ep 1: Asa</option>
+                        <option value="https://www.dropbox.com/scl/fi/glmuyrsd0jslf0ei8kazd/The-Idiotastics-S2-EP-6-Mr.-Biscuit-is-always-grumpy-XD.mp4?rlkey=7spi6wnyzdiznw6pm81xfvop7&st=asbxjfdx&raw=1">Ep 2: Mr. Biscuit Bein' Grumpy</option>
+                        <option value="https://www.dropbox.com/scl/fi/j763vmr8amzvg23l1ohqz/The-Idiotastics-S3-EP-1-Brian-being-weird.mp4?rlkey=v3um6ykyi90j1tlffrlzmytqd&st=7smijx81&raw=1">Ep 3: Mr. Brian Bein' Weird</option>
+                        <option value="https://www.dropbox.com/scl/fi/67guvbj07jtnv4vku3j3t/The-Idiotastics-S3-EP-2-David-and-Brian-funny-clips.mp4?rlkey=vt483znv8ov5cupgnhdnhrb40&st=x8felt5d&raw=1">Ep 4: David and Brian Funny Moments</option>
+                        <option value="https://www.dropbox.com/scl/fi/7uyguv6lo2yo760er20vf/The-Idiotastics-S3-EP-3-David-funny-clips.mp4?rlkey=60vbbpr06f47prt68co27gckb&st=g8yzp5ce&raw=1">Ep 5: David Funny Moments</option>
+                        <option value="https://www.dropbox.com/scl/fi/avzx47mzbovigytcimpp8/The-Idiotastics-S3-EP-4-Folding.mp4?rlkey=c4l797nuy00ed2q0o6h0g4afd&st=zwki7u55&raw=1">Ep 6: Folding</option>
+                        
+
+
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="card">
+                <img src="posters/tales.jpg">
+                <p>Tales Of The Castastics</p>
+                <select onchange="playMedia(this.value, 'Tales Of The Castastics' + this.options[this.selectedIndex].text); if(this.value) { registerVideoView(); loadMediaInteraction('totc_show'); }">
+                    <option value="">Select Episode</option>
+                    <optgroup label="Season 1">
+                        <option value="https://www.dropbox.com/scl/fi/k3rm4y67wn63c51olpbds/b1f5225698ae11e0e6b9faebb3f99ec2.mp4?rlkey=k8tva8g3bi05tzio739imu0qj&st=m29okd8p&raw=1">Ep 1: David Draws</option>
+                        <option value="https://www.dropbox.com/scl/fi/hjwgol7iux5fsxs269z53/4e6bd76b5ac219e489c876bdc5cec283.mp4?rlkey=0jozj4xfp6zcotskobdgt5iqm&st=ccxx0tuy&raw=1">Ep 2: LETS SMACK IT</option>
+                        <option value="https://www.dropbox.com/scl/fi/o4z55dklis3ckd6w43yf2/98d1ee1e779beaa64681493c64596f3c.mp4?rlkey=2g9szjpa4wuwa3ssg8nrelhik&st=94m8cszt&raw=1">Ep 3: Ninja Zombies</option>
+                        <option value="https://www.dropbox.com/scl/fi/o8xi16z2z80nhrwuzmsfb/22a193fec5b870fc3aec87f47cf60fdc.mp4?rlkey=sk6ozpnv9cobwav916w0l7d2u&st=hbydxw47&raw=1">Ep 4: Under The Deep Laugh</option>
+                        <option value="https://www.dropbox.com/scl/fi/ne8q70oq4ay6zaxkyenic/7f32f700a4cce18f2fdd2594b624b9c1.mp4?rlkey=305zcnyazlq9jagx7wsohecww&st=wso0e4fd&raw=1">Ep 5: Pac Man Chases Ghosts</option>
+                        <option value="https://www.dropbox.com/scl/fi/ult1pyo6o1djjzrk0ay5h/4e578296b544d5a36bc210cca2d6d473.mp4?rlkey=hrr3mvlan1tcz5szddltt873s&st=9yjj902g&raw=1">Ep 6: A Bomb Away</option>
+                        <option value="https://www.dropbox.com/scl/fi/rmml33ww1g7vpcorf3dsc/56a3754f938d642ee2d3f5da9d735e4c.mp4?rlkey=9bib3bk085fj6vd9ml1ukusn4&st=u87snhys&raw=1">Ep 7: Boxlunch Killer Eats</option>
+                        <option value="https://www.dropbox.com/scl/fi/fxtn7wva485x621olhl03/904c1d5b367c86964ed177da96881310.mp4?rlkey=b27slq96cgggusuw1gbv28gok&st=paun95x0&raw=1">Ep 8: Kenny Vs. Three</option>
+                        <option value="https://www.dropbox.com/scl/fi/ucvup5cf5bspkbarmklub/f44bbf9b14873ecab7f234670571c916.mp4?rlkey=ffxjc89ohdzifw1oakngljpkb&st=33m2f5nj&raw=1">Ep 9: The Artist Vs. Darker</option>
+                        <option value="https://www.dropbox.com/scl/fi/8kd4jqzx6w6ch1t1s2e88/e32c01a533ec436609d4457415fe390b.mp4?rlkey=o80lfm3o6xvzloaeei3zygm27&st=e3q2r4qj&raw=1">Ep 10: Ezekiel Play With Super Toys</option>
+                        <option value="https://www.dropbox.com/scl/fi/31bow3hat2xva48ic8gw9/a36317108275df429b502c6d869a4f73.mp4?rlkey=8sf0i2e5eixl24w97059txr4o&st=62htdwrk&raw=1">Ep 11: The Pens In Trouble</option>
+                        <option value="https://www.dropbox.com/scl/fi/h2peir2t5i08oxfgcz3ro/19a5a1d017edcb1b6c861a8ee53ea92f.mp4?rlkey=ii3sjy8xl5v3f8nlscdf6u4gv&st=dwfx3ivj&raw=1">Ep 12: Ishmell Chases Nate and Matt</option>
+                        
+       
+                </optgroup>
+                </select>
+            </div>        
+        </div>
+    </div>
+
+    <script>
+        function playMedia(link, title) {
+            if (!link || link.includes('DRIVE_ID')) return;
+            const display = document.getElementById('video-display');
+            const container = document.getElementById('player-container');
+            const text = document.getElementById('now-playing');
+
+            display.style.display = "block";
+            text.innerText = "NOW PLAYING: " + title;
+
+            container.innerHTML = `
+                <video id="main-player" controls playsinline webkitallowfullscreen mozallowfullscreen allowfullscreen autoplay>
+                    <source src="${link}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>`;
+
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBx7S1tbTO02Y0TfSYodqJWRvLfQwq_Qs",
+            authDomain: "castastics-movies.firebaseapp.com",
+            databaseURL: "https://castastics-movies-default-rtdb.firebaseio.com",
+            projectId: "castastics-movies",
+            storageBucket: "castastics-movies.firebasestorage.app",
+            messagingSenderId: "194457932457",
+            appId: "1:194457932457:web:72e3372596f4f248a30fb8",
+            measurementId: "G-W59DD5SNZ6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const subRef = ref(db, 'subCount');
+
+        const countElement = document.getElementById("sub-count-text");
+        const subButton = document.getElementById("sub-button");
+
+        function formatSubs(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(0) + 'K';
+            return num;
+        }
+
+        // 1. Instantly listen for live updates from Firebase globally
+        // 1. Instantly listen for live updates from Firebase globally & check local memory
+        onValue(subRef, (snapshot) => {
+            const currentCount = snapshot.val();
+            if (countElement && currentCount !== null) {
+                countElement.innerText = formatSubs(currentCount) + " subscribers";
+            }
+            
+            // Check if THIS specific browser already subscribed before the refresh
+            if (localStorage.getItem('isSubscribed') === 'true') {
+                subButton.classList.add('subscribed');
+                subButton.innerText = "✓ Subscribed";
+            }
+        });
+
+        // 2. Add +1 (or subtract -1) and save state to browser memory
+        // 2. Add +1 (or subtract -1) and save state to browser memory
+        function handleSubscribe() {
+            // Read directly from browser memory to see if they are already subbed
+            const alreadySubbed = localStorage.getItem('isSubscribed') === 'true';
+            
+            runTransaction(subRef, (currentValue) => {
+                if (alreadySubbed) {
+                    // If already subbed, clicking again UNSUBSCRIBES (-1)
+                    return (currentValue || 750000) - 1;
+                } else {
+                    // If not subbed, clicking adds +1
+                    return (currentValue || 750000) + 1;
+                }
+            });
+            
+            // Toggle the visual state and update the memory based on what just happened
+            const toast = document.getElementById("custom-toast");
+            
+            // Tiny helper function to show your smooth yellow bubble message
+            function showSubToast(message) {
+                if (toast) {
+                    toast.innerText = message;
+                    toast.style.display = "block";
+                    setTimeout(() => {
+                        toast.style.display = "none";
+                    }, 3000);
+                }
+            }
+
+            if (alreadySubbed) {
+                subButton.classList.remove('subscribed');
+                subButton.innerText = "Subscribe";
+                localStorage.setItem('isSubscribed', 'false');
+                
+                // Show clean toast notification (No alerts!)
+                showSubToast("Unsubscribed successfully.");
+            } else {
+                subButton.classList.add('subscribed');
+                subButton.innerText = "✓ Subscribed";
+                localStorage.setItem('isSubscribed', 'true');
+                
+                // Show clean toast notification (No alerts!)
+                showSubToast("Subscribed successfully!");
+            }
+
+            // 🌟 UNLOCK/LOCK YOUR PERKS INSTANTLY
+            checkSubscriberPerks();
+        }
+
+        // Your existing sub button event listener remains clean inside the script
+        if (subButton) {
+            subButton.addEventListener("click", handleSubscribe);
+        }
+
+        // Function to handle switching the perks view smoothly
+        function checkSubscriberPerks() {
+            const lockedBox = document.getElementById("perks-locked");
+            const unlockedBox = document.getElementById("perks-unlocked");
+            const mainBox = document.getElementById("subscriber-perks-box");
+
+            // Check if user is marked as subscribed in localStorage
+            if (localStorage.getItem("isSubscribed") === "true") {
+                if (lockedBox) lockedBox.style.display = "none";
+                if (unlockedBox) unlockedBox.style.display = "block";
+                if (mainBox) mainBox.style.border = "1px solid #ffcc00"; // Sleek solid boundary when active
+            } else {
+                if (lockedBox) lockedBox.style.display = "block";
+                if (unlockedBox) unlockedBox.style.display = "none";
+                if (mainBox) mainBox.style.border = "2px dashed #444";
+            }
+        }
+
+        // Call it immediately on page load to check their subscription status right away
+        window.addEventListener("DOMContentLoaded", () => {
+            checkSubscriberPerks();
+        });
+    </script>
+
+                <script type="module">
+        import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your exact same config so this separate script can access Firebase safely
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBx7S1tbTO02Y0TfSYodqJWRvLfQwq_Qs",
+            authDomain: "castastics-movies.firebaseapp.com",
+            databaseURL: "https://castastics-movies-default-rtdb.firebaseio.com",
+            projectId: "castastics-movies",
+            storageBucket: "castastics-movies.firebasestorage.app",
+            messagingSenderId: "194457932457",
+            appId: "1:194457932457:web:72e3372596f4f248a30fb8",
+            measurementId: "G-W59DD5SNZ6"
+        };
+
+        // Initialize Firebase safely for this module
+        let app;
+        try {
+            app = getApp(); // Try to use the already initialized app
+        } catch (e) {
+            app = initializeApp(firebaseConfig); // If not found, initialize it here
+        }
+
+        const db = getDatabase(app);
+        const viewRef = ref(db, 'viewCount');
+        const viewElement = document.getElementById("view-count-text");
+
+        // 1. Listen for live view count updates from Firebase
+        onValue(viewRef, (snapshot) => {
+            const currentViews = snapshot.val();
+            if (viewElement && currentViews !== null) {
+                // Formats the number with commas (e.g., 1,042,583 views)
+                viewElement.innerText = currentViews.toLocaleString() + " views";
+            }
+        });
+
+        // 2. Function to add +1 view when a video or episode is selected
+        function registerVideoView() {
+            runTransaction(viewRef, (currentValue) => {
+                // If database node doesn't exist yet, starts at your baseline count
+                return (currentValue || 1042583) + 1;
+            });
+        }
+
+        // Send the function to the global window scope so your HTML onclicks/onchanges can find it
+        window.registerVideoView = registerVideoView;
+                </script>
+
+
+                <script type="module">
+        import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your exact same config so this script connects completely independently
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBx7S1tbTO02Y0TfSYodqJWRvLfQwq_Qs",
+            authDomain: "castastics-movies.firebaseapp.com",
+            databaseURL: "https://castastics-movies-default-rtdb.firebaseio.com",
+            projectId: "castastics-movies",
+            storageBucket: "castastics-movies.firebasestorage.app",
+            messagingSenderId: "194457932457",
+            appId: "1:194457932457:web:72e3372596f4f248a30fb8",
+            measurementId: "G-W59DD5SNZ6"
+        };
+
+        // Initialize Firebase safely for this module
+        let app;
+        try {
+            app = getApp(); 
+        } catch (e) {
+            app = initializeApp(firebaseConfig); 
+        }
+
+        const db = getDatabase(app);
+        
+        // Track which movie/show is currently selected (Default to movie1)
+        window.currentMediaId = "movie1"; 
+
+        // Baseline "High-Tier" Pre-existing comments to seed the database if it's brand new
+        const defaultSeeds = {
+            movie1: {
+                rating: { totalStars: 25, count: 5 },
+                comments: {
+                    "seed1": { name: "ArtsyFan_99", text: "This movie is literal perfection! Love the character designs! 🔥" },
+                    "seed2": { name: "RobloxDev_Trini", text: "Incredible storytelling. David really brought his childhood books to life perfectly." }
+                }
+            },
+            movie2: {
+                rating: { totalStars: 30, count: 6 },
+                comments: {
+                    "seed1": { name: "CastasticsStan", text: "Into the CastasticVerse went completely crazy! Jael was an awesome villain." },
+                    "seed2": { name: "BrianTheFool_Fan", text: "The soundtrack during the Trinidad scenes was beautiful." }
+                }
+            },
+            movie3: {
+                rating: { totalStars: 24, count: 5 },
+                comments: {
+                    "seed1": { name: "StoryLover", text: "BabyDavid is so cute! Seeing Emily come back into his life made me so happy." }
+                }
+            },
+            movie4: {
+                rating: { totalStars: 35, count: 7 },
+                comments: {
+                    "seed1": { name: "EpicGamer", text: "The action in this one went crazy! True superhero vibe status." }
+                }
+            },
+            castastics_show: {
+                rating: { totalStars: 48, count: 10 },
+                comments: {
+                    "seed1": { name: "ClassicViewer", text: "Ep 2 with the Evil Toys is a masterpiece lol. Keep it up!" },
+                    "seed2": { name: "V_vs_Numbers", text: "Letters vs Numbers episode was legendary." }
+                }
+            }
+        };
+
+        let unsubscribeComments = null;
+
+        // Load media data whenever a user switches movies or episodes
+        function loadMediaInteraction(mediaId) {
+            window.currentMediaId = mediaId;
+            const box = document.getElementById("media-interaction-box");
+            if (box) box.style.display = "block";
+            
+            // Clean up old active listeners
+            if (unsubscribeComments) unsubscribeComments();
+
+            const mediaRef = ref(db, 'mediaStats/' + mediaId);
+
+            unsubscribeComments = onValue(mediaRef, (snapshot) => {
+                let data = snapshot.val();
+                
+                // If this specific media has absolutely no data in Firebase yet, seed it with high ratings/comments
+                if (!data && defaultSeeds[mediaId]) {
+                    set(mediaRef, defaultSeeds[mediaId]);
+                    data = defaultSeeds[mediaId];
+                }
+
+                // --- Render Ratings ---
+                const ratingData = data?.rating || { totalStars: 5, count: 1 };
+                const avg = (ratingData.totalStars / ratingData.count).toFixed(1);
+                document.getElementById("average-rating-text").innerText = `(${avg}/5 from ${ratingData.count} reviews)`;
+                document.getElementById("average-stars").innerText = "⭐".repeat(Math.round(avg));
+
+                // --- Render Comments ---
+                const commentsListElement = document.getElementById("comments-list");
+                commentsListElement.innerHTML = ""; // Clear existing list
+                
+                if (data?.comments) {
+                    Object.values(data.comments).reverse().forEach(comment => {
+                        const commentDiv = document.createElement("div");
+                        commentDiv.style.cssText = "background: #1c1c1c; padding: 10px; margin-bottom: 8px; border-radius: 4px; border-left: 3px solid #ffcc00;";
+                        commentDiv.innerHTML = `<strong style="color: #ffcc00; font-size: 0.85rem; display:block; margin-bottom:2px;">@${comment.name}</strong>
+                                                <span style="color: #eee; font-size: 0.9rem;">${comment.text}</span>`;
+                        commentsListElement.appendChild(commentDiv);
+                    });
+                } else {
+                    commentsListElement.innerHTML = `<p style="color: #666; font-size: 0.9rem; text-align: center;">No comments yet. Be the first!</p>`;
+                }
+            });
+        }
+
+        // Action when a user updates the star rating dropdown
+        function submitRating() {
+            const selectEl = document.getElementById("user-star-input");
+            const selectedStarValue = parseInt(selectEl.value);
+            const ratingRef = ref(db, `mediaStats/${window.currentMediaId}/rating`);
+
+            runTransaction(ratingRef, (currentRating) => {
+                if (!currentRating) {
+                    return { totalStars: selectedStarValue, count: 1 };
+                }
+                return {
+                    totalStars: currentRating.totalStars + selectedStarValue,
+                    count: currentRating.count + 1
+                };
+            });
+        }
+
+        // Action when a user clicks 'Post' comment (Now submits rating too!)
+        function submitComment() {
+            const nameInput = document.getElementById("comment-username");
+            const textInput = document.getElementById("comment-text");
+            const selectEl = document.getElementById("user-star-input");
+            const toast = document.getElementById("custom-toast");
+            
+            const storageKey = 'hasCommented_' + window.currentMediaId;
+
+            // Helper function to handle showing the sleek toast notification
+            function showToast(message) {
+                if (toast) {
+                    toast.innerText = message;
+                    toast.style.display = "block";
+                    setTimeout(() => {
+                        toast.style.display = "none";
+                    }, 3000);
+                }
+            }
+
+            // 1. Check if this browser already left a comment on this media
+            if (localStorage.getItem(storageKey) === 'true') {
+                showToast("You've already shared your thoughts on this one!");
+                textInput.value = ""; 
+                return; 
+            }
+
+            const name = nameInput.value.trim() || "AnonymousCastastian";
+            const text = textInput.value.trim();
+
+            if (!text) return; // Prevent empty posts
+
+            // Get the selected star value from the dropdown menu
+            const selectedStarValue = parseInt(selectEl.value);
+
+            // References for Firebase
+            const commentsRef = ref(db, `mediaStats/${window.currentMediaId}/comments`);
+            const ratingRef = ref(db, `mediaStats/${window.currentMediaId}/rating`);
+            const newCommentRef = push(commentsRef);
+            
+            // 2. Submit the text comment to Firebase
+            set(newCommentRef, { name: name, text: text }).then(() => {
+                
+                // 3. Simultaneously update the star ratings and count in Firebase
+                runTransaction(ratingRef, (currentRating) => {
+                    if (!currentRating) {
+                        return { totalStars: selectedStarValue, count: 1 };
+                    }
+                    return {
+                        totalStars: currentRating.totalStars + selectedStarValue,
+                        count: currentRating.count + 1
+                    };
+                });
+
+                // Lock it in browser memory
+                localStorage.setItem(storageKey, 'true');
+                
+                // Show the toast notification
+                showToast("Thank you for commenting!");
+                
+                textInput.value = ""; // Clear input bar cleanly
+            });
+        }
+
+        // Bind functions globally to window scope
+        window.loadMediaInteraction = loadMediaInteraction;
+        window.submitRating = submitRating;
+        window.submitComment = submitComment;
+
+        
+                </script>
+
+    </div> 
+
+
+<div id="page-merch" class="app-page" style="display: none;">
+        <div class="tube-shop-layout">
+            
+            <div class="collection-shelf">
+                <div class="shelf-title">Grab DVDs & CDs</div>
+                <a href="https://kunaki.com/MSales.asp?PublisherId=228185&PP=1" target="_blank" class="merch-shop-card">
+                    <div class="merch-image-cover">
+                        <img src="merch_cds.jpg" alt="Physical DVDS/CDs">
+                    </div>
+                    <div class="merch-details-box">
+                        <h3>Physical Dvds and Cds</h3>
+                        <p>Music and Movie Collection</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="collection-shelf">
+                <div class="shelf-title">Castastics Toys</div>
+                <a href="https://payhip.com/Castasticstoys" target="_blank" class="merch-shop-card">
+                    <div class="merch-image-cover">
+                        <img src="merch_toys.jpg" alt="Castastics Toys">
+                    </div>
+                    <div class="merch-details-box">
+                        <h3>Castastics Toys</h3>
+                        <p>12 Products</p>
+                    </div>
+                </a>
+            </div>
+            <div class="collection-shelf">
+                <div class="shelf-title">Physical Books</div>
+                <a href="https://www.walmart.com/browse/0?facet=brand:David+Artsy" target="_blank" class="merch-shop-card">
+                    <div class="merch-image-cover">
+                        <img src="merch_books.jpg" alt="Physical Books">
+                    </div>
+                    <div class="merch-details-box">
+                        <h3>Physical Books</h3>
+                        <p>Comics and Novels</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="collection-shelf">
+                <div class="shelf-title">Merchandise</div>
+                <a href="https://thecastasticstore.threadless.com/" target="_blank" class="merch-shop-card">
+                    <div class="merch-image-cover">
+                        <img src="merch_general.jpg" alt="Merchandise">
+                    </div>
+                    <div class="merch-details-box">
+                        <h3>Merchandise</h3>
+                        <p>Clothing, Stickers, Artworks, Bags etc</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+</div>
+    <div id="page-contact" class="app-page" style="display: none;">
+        <div class="container">
+            <div class="section-title">CONTACT & INQUIRIES</div>
+            <div class="contact-container">
+                <h2 style="color:#ffcc00; margin-top:0;">GET IN TOUCH</h2>
+                <p style="color:#aaa; font-family:sans-serif; font-size:0.9rem; margin-bottom:25px;">
+                    For orders, inquires, or a question, shoot a message directly below.
+                </p>
+                <a href="https://wa.me/18683917461" target="_blank" class="contact-btn">Contact on WhatsApp</a>
+                <div class="contact-email">
+                    Or Email: <br>
+                    <a href="mailto:therealzdavidtheartist@gmail.com">therealzdavidtheartist@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div style="text-align: center; padding-bottom: 20px;">
+            <img src="logo.png" alt="The Castastics Logo" style="max-width: 140px; height: auto; opacity: 0.85;">
+        </div>
+        <div class="footer-socials">
+            <a href="https://www.facebook.com/thedavidartsy/" target="_blank">Facebook</a>
+            <a href="https://www.instagram.com/itsdavidartsy/" target="_blank">Instagram</a>
+            <a href="https://m.twitch.tv/davidartsylive/about" target="_blank">Twitch</a>
+            <a href="https://www.tiktok.com/@realdavidartsy/" target="_blank">TikTok</a>
+            <a href="https://youtube.com/@davidartsy" target="_blank">Youtube</a>
+            <a href="https://www.snapchat.com/@thecastastics" target="_blank">Snapchat</a>
+        </div>
+        <p class="copyright">&copy; 2026 Castastics. All Rights Reserved.</p>
+    </footer>
+
+</div> </div> <script>
+    // Toggle action handler for sidebar
+    function toggleSidebar() {
+        var sidebar = document.getElementById('app-sidebar');
+        var wrapper = document.getElementById('castastics-interface');
+        if (sidebar && wrapper) {
+            sidebar.classList.toggle('open');
+            wrapper.classList.toggle('sidebar-active');
+        }
+    }
+
+    // Dynamic Page Switching Logic
+    function switchPage(pageId) {
+        var pages = document.querySelectorAll('.app-page');
+        pages.forEach(function(p) {
+            p.style.display = 'none';
+        });
+
+        var targetPage = document.getElementById('page-' + pageId);
+        if (targetPage) {
+            targetPage.style.display = 'block';
+        }
+
+        var navItems = document.querySelectorAll('.nav-menu .nav-item');
+        navItems.forEach(function(item) {
+            item.classList.remove('active');
+        });
+        
+        if (window.event && window.event.currentTarget) {
+            window.event.currentTarget.classList.add('active');
+        }
+
+        var sidebar = document.getElementById('app-sidebar');
+        var wrapper = document.getElementById('castastics-interface');
+        if (sidebar && wrapper) {
+            sidebar.classList.remove('open');
+            wrapper.classList.remove('sidebar-active');
+        }
+        
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+</script>
+    <div id="custom-toast" style="display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #ffcc00; color: #000; padding: 12px 24px; border-radius: 25px; font-family: sans-serif; font-weight: bold; font-size: 0.95rem; box-shadow: 0px 4px 15px rgba(0,0,0,0.5); z-index: 99999; text-align: center; min-width: 250px;">
+    Thank you for commenting!
+    </div>
+</body>
+</html>
