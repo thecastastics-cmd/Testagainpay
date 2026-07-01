@@ -812,25 +812,81 @@ Castastics is a world of large casts of unique characters and make all dreams co
             </div>        
         </div>
     </div>
+<!-- THE REAL $1.99 PAYPAL PAYWALL MODAL -->
+<div id="payment-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; font-family: sans-serif;">
+    <div style="background: #111; border: 2px solid #ffcc00; padding: 30px; border-radius: 8px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 0 20px rgba(255,204,0,0.2);">
+        <h2 style="color: #ffcc00; margin-top: 0;">Unlock Full Access</h2>
+        <p style="color: #fff; line-height: 1.5; font-size: 0.95rem;">Subscribe now for a single one-time fee of <strong>$1.99</strong> to instantly watch all Castastics movies and TV shows freely with unlimited playback!</p>
+        <div style="margin: 25px 0 15px 0; display: flex; gap: 10px; justify-content: center;">
+            <!-- Your real PayPal checkout link -->
+            <a href="https://www.paypal.com/ncp/payment/RACQLWXRZK9MJ" style="background: #ffcc00; color: #000; border: none; padding: 12px 24px; font-weight: bold; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.95rem; display: inline-block;">Pay $1.99 via PayPal</a>
+            <button onclick="closePaymentModal()" style="background: #222; color: #aaa; border: 1px solid #444; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 0.95rem;">Cancel</button>
+        </div>
+    </div>
+</div>
 
+<!-- THE UNSUBSCRIBE LOSS OF ACCESS WARNING MODAL -->
+<div id="unsub-warning-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; font-family: sans-serif;">
+    <div style="background: #111; border: 2px solid #ff3333; padding: 30px; border-radius: 8px; text-align: center; max-width: 420px; width: 90%; box-shadow: 0 0 20px rgba(255,51,51,0.2);">
+        <h2 style="color: #ff3333; margin-top: 0;">Are you sure?</h2>
+        <p style="color: #fff; line-height: 1.5; font-size: 0.95rem;">If you unsubscribe, you will <strong>lose complete access</strong> to the Castastics movies and shows. You will receive <strong>no refunds</strong> and will have to pay $1.99 again to resubscribe later.</p>
+        <div style="margin: 25px 0 15px 0; display: flex; gap: 10px; justify-content: center;">
+            <button onclick="confirmUnsubscribe()" style="background: #ff3333; color: #fff; border: none; padding: 12px 24px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.95rem;">Yes, Unsubscribe</button>
+            <button onclick="closeUnsubModal()" style="background: #222; color: #aaa; border: 1px solid #444; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 0.95rem;">No, Keep Access</button>
+        </div>
+    </div>
+</div>
     <script>
-        function playMedia(link, title) {
-            if (!link || link.includes('DRIVE_ID')) return;
-            const display = document.getElementById('video-display');
-            const container = document.getElementById('player-container');
-            const text = document.getElementById('now-playing');
+        function playMedia(link, title, type) {
+    if (!link || link.includes('DRIVE_ID')) return;
+    
+    // Check if user is an active premium subscriber
+    const isSubscribed = localStorage.getItem('isSubscribed') === 'true';
+    const display = document.getElementById('video-display');
+    const container = document.getElementById('player-container');
+    const text = document.getElementById('now-playing');
 
-            display.style.display = "block";
-            text.innerText = "NOW PLAYING: " + title;
+    // Rule 1: TV Shows get zero previews. Block immediately.
+    if (!isSubscribed && type === 'show') {
+        showCustomToast("TV Shows require a subscription. Preview blocked!");
+        openPaymentModal();
+        return;
+    }
 
-            container.innerHTML = `
-                <video id="main-player" controls playsinline webkitallowfullscreen mozallowfullscreen allowfullscreen autoplay>
-                    <source src="${link}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>`;
+    display.style.display = "block";
+    text.innerText = "NOW PLAYING: " + title;
 
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
+    // Inject your video element securely
+    container.innerHTML = `
+        <video id="main-player" controls playsinline autoplay style="width:100%; height:100%;">
+            <source src="${link}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>`;
+
+    const player = document.getElementById("main-player");
+
+    // Rule 2: Movies cut off cleanly at exactly 3 minutes (180 seconds)
+    if (!isSubscribed && type === 'movie') {
+        player.addEventListener('timeupdate', function() {
+            if (player.currentTime >= 180) { 
+                player.pause();
+                player.src = ""; // Force disconnect video stream source
+                player.load();
+                container.innerHTML = ""; // Wipe player interface clean
+                openPaymentModal(); // Trigger payment popup window
+                showCustomToast("3-Minute preview limit reached!");
+            }
+        });
+    }
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Helpers to handle showing/hiding our new popups safely
+function openPaymentModal() { document.getElementById("payment-modal").style.display = "flex"; }
+function closePaymentModal() { document.getElementById("payment-modal").style.display = "none"; }
+function openUnsubModal() { document.getElementById("unsub-warning-modal").style.display = "flex"; }
+function closeUnsubModal() { document.getElementById("unsub-warning-modal").style.display = "none"; }
     </script>
 
     <script type="module">
@@ -953,6 +1009,61 @@ Castastics is a world of large casts of unique characters and make all dreams co
         window.addEventListener("DOMContentLoaded", () => {
             checkSubscriberPerks();
         });
+        // 1. Intercept the click event on the master "Subscribe" button
+function handleSubscribeRequest() {
+    const alreadySubbed = localStorage.getItem('isSubscribed') === 'true';
+    if (alreadySubbed) {
+        window.openUnsubModal(); // Show the customized "No refunds" alert warning window
+    } else {
+        window.openPaymentModal(); // Prompt them with the PayPal paywall link window
+    }
+}
+
+// 2. What happens if they confirm the warning and drop subscription access
+function confirmUnsubscribe() {
+    window.closeUnsubModal();
+    // Drop Firebase total count down by 1 transactionally
+    runTransaction(subRef, (val) => (val || 750000) - 1);
+    
+    localStorage.setItem('isSubscribed', 'false'); // Lock the local gatekeeper vault
+    window.showCustomToast("Unsubscribed successfully. Previews restricted.");
+    
+    // Wipe url variables clean and refresh page states instantly
+    window.location.href = window.location.origin + window.location.pathname;
+}
+
+// 3. LISTEN FOR SUCCESSFUL PAYPAL REDIRECTS AUTOMATICALLY
+function checkPayPalReturnStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // If the URL contains "?payment=success", process their unlock!
+    if (urlParams.get('payment') === 'success') {
+        const alreadySubbed = localStorage.getItem('isSubscribed') === 'true';
+        
+        if (!alreadySubbed) {
+            // Increase your Firebase database metric dynamically by 1
+            runTransaction(subRef, (val) => (val || 750000) + 1);
+            
+            // Set the browser storage gatekeeper key permanently to true
+            localStorage.setItem('isSubscribed', 'true');
+            window.showCustomToast("Payment verified! Welcome to Castastics Unlimited!");
+        }
+        
+        // Clean up the URL address bar so it looks professional (removes the tracking parameters)
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
+// Execute the check instantly every time the page loads up
+checkPayPalReturnStatus();
+
+// Bind the click event to your header sub-button element
+if (subButton) {
+    subButton.addEventListener("click", handleSubscribeRequest);
+}
+
+// Safely expose internal database workflows over to global DOM window framework
+window.confirmUnsubscribe = confirmUnsubscribe;
     </script>
 
                 <script type="module">
